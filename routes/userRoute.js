@@ -1,4 +1,4 @@
-import express from "express";
+import { Router } from "express";
 import {
   loginController,
   registerController,
@@ -6,7 +6,7 @@ import {
 
 //router object
 
-const userRoute = express.Router();
+const userRoute = Router();
 
 //routers
 //POST || LOGIN
@@ -14,4 +14,5 @@ userRoute.post("/login", loginController);
 
 //POST || REGISTER
 userRoute.post("/register", registerController);
+
 export default userRoute;

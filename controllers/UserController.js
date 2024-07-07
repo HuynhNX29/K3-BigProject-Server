@@ -1,5 +1,6 @@
-import userModel from "../models/UserModels.js";
-
+import UserModel from "../models/UserModel.js";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 //LOGIN
 const loginController = async (req, res) => {
   try {
@@ -9,7 +10,7 @@ const loginController = async (req, res) => {
       throw new Error("Missing email or password");
     }
 
-    const user = await userModel.findOne({ email, password });
+    const user = await UserModel.findOne({ email, password });
 
     if (!user) {
       res.status(404).send("User not found");
@@ -30,29 +31,46 @@ const loginController = async (req, res) => {
 
 //REGISTER
 const registerController = async (req, res) => {
-  try {
-    const { email, password } = body;
+  const body = req.body;
+  const { username, email, password } = body;
 
-    if (!password || !email) {
-      throw new Error("Missing email or password");
+  try {
+    console.log(body);
+
+    // console.log(req.body);
+
+    if (!username || !password) {
+      throw new Error("Missing anything");
     }
 
-    const existingUser = await UserModel.findOne({ email });
+    const existingUser = await UserModel.findOne({ username });
     if (existingUser) {
       throw new Error("User is already registered");
     }
 
-    const newUser = new userModel({ email, password });
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hash(password, salt);
+
+    const newUser = new UserModel({
+      username,
+      email,
+      password: hash,
+    });
     await newUser.save();
-    
+
+    const accesstoken = jwt.sign({ email, _id: newUser._id, mindX });
+
     res.status(201).json({
-      success: true,
-      newUser,
+      message: "Created successfully!",
+      data: {
+        _id: newUser._id,
+        username,
+        accesstoken,
+      },
     });
   } catch (error) {
     res.status(400).json({
-      success: false,
-      error,
+      message: error.message,
     });
     //   res.send("");
   }
