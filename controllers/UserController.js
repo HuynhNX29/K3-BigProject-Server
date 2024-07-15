@@ -55,7 +55,7 @@ const registerController = async (req, res) => {
   const { name, email, password } = body;
 
   try {
-    console.log(body);
+    // console.log(body);
 
     // console.log(req.body);
 
