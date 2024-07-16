@@ -10,7 +10,7 @@ const transactionRoute = Router();
 
 //routers
 // //GET || Get all transactions
-transactionRoute.get("/get-transaction", getAllTransaction);
+transactionRoute.post("/get-transaction", getAllTransaction);
 
 // //POST || Add transaction
 transactionRoute.post("/add-transaction", addTransaction);

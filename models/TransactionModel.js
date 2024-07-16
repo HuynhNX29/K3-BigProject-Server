@@ -3,6 +3,11 @@ import mongoose, { Schema } from "mongoose";
 //schema design
 const transactionSchema = new Schema(
   {
+    userid: {
+      type: String,
+      required: true,
+    },
+
     amount: {
       type: Number,
       required: [true, "amount is required"],
@@ -27,7 +32,7 @@ const transactionSchema = new Schema(
     },
 
     date: {
-      type: String,
+      type: Date,
       required: [true, "date is required"],
     },
   },

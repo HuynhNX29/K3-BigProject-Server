@@ -1,14 +1,33 @@
 import TransactionModel from "../models/TransactionModel.js";
+import moment from "moment";
 
 const getAllTransaction = async (req, res) => {
   try {
-    const transaction = await TransactionModel.findOne({});
+    const { userid, frequency, selectedDate, type } = req.body;
+    const transaction = await TransactionModel.find({
+
+      ...(frequency !== "custom"
+        ? {
+            date: {
+              $gt: moment().subtract(Number(frequency), "d").toDate(),
+            },
+          }
+        : {
+            date: {
+              $gte: selectedDate[0],
+              $lte: selectedDate[1],
+            },
+          }),
+
+      userid: userid,
+
+      ...(type !== "all" && { type }),
+
+    });
 
     res.status(200).json({
       message: "Get all transactions successfully!",
-      data: {
-        _id: transaction._id,
-      },
+      data: transaction,
     });
   } catch (error) {
     res.status(400).json({
