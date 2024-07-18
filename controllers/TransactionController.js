@@ -68,4 +68,25 @@ const editTransaction = async (req, res) => {
     });
   }
 };
-export { getAllTransaction, addTransaction, editTransaction };
+
+const deleteTransaction = async (req, res) => {
+  try {
+    await TransactionModel.findOneAndDelete({
+      _id: req.body.transactionId,
+    });
+
+    res.status(201).json({
+      message: "Delete successfully!",
+    });
+  } catch (error) {
+    res.status(400).json({
+      message: error.message,
+    });
+  }
+};
+export {
+  getAllTransaction,
+  addTransaction,
+  editTransaction,
+  deleteTransaction,
+};
