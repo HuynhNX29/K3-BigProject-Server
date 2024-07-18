@@ -5,7 +5,6 @@ const getAllTransaction = async (req, res) => {
   try {
     const { userid, frequency, selectedDate, type } = req.body;
     const transaction = await TransactionModel.find({
-
       ...(frequency !== "custom"
         ? {
             date: {
@@ -22,7 +21,6 @@ const getAllTransaction = async (req, res) => {
       userid: userid,
 
       ...(type !== "all" && { type }),
-
     });
 
     res.status(200).json({
@@ -55,4 +53,19 @@ const addTransaction = async (req, res) => {
   }
 };
 
-export { getAllTransaction, addTransaction };
+const editTransaction = async (req, res) => {
+  try {
+    await TransactionModel.findOneAndUpdate(
+      { _id: req.body.transactionId },
+      req.body.payload
+    );
+    res.status(201).json({
+      message: "Edit successfully!",
+    });
+  } catch (error) {
+    res.status(400).json({
+      message: error.message,
+    });
+  }
+};
+export { getAllTransaction, addTransaction, editTransaction };
